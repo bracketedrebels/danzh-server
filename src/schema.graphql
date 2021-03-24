@@ -1,3 +1,31 @@
 type Query {
-  entities(query: [String!]!): [String!]!
+  projects: [ID!]!
+  entities(project: ID!): [Entity!]!
+  predicates(project: ID!): [Entity!]!
+  edges(query: [String!]!): [Edge!]!
+}
+
+type Mutation {
+  createProject(project: ID!, name: String!, description: String): ID!
+  createEntity(project: ID!, name: String!, description: String): ID!
+  createPredicate(project: ID!, name: String!, description: String): ID!
+  edge(subject: ID!, predicate: ID!, object: ID!): Edge!
+}
+
+type Entity {
+  id: ID!
+  name: String!
+  description: String!
+}
+
+type Predicate {
+  id: ID!
+  name: String!
+  description: String!
+}
+
+type Edge {
+  subject: Entity!
+  predicate: Predicate!
+  object: Entity!
 }
