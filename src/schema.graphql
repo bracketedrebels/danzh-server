@@ -1,0 +1,3 @@
+type Query {
+  entities(query: [String!]!): [String!]!
+}
