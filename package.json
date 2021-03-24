@@ -1,0 +1,27 @@
+{
+  "name": "danzh-server",
+  "version": "0.0.0-semantically-versioned",
+  "description": "DANZH server",
+  "main": "index.js",
+  "scripts": {
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bracketedrebels/danzh-server.git"
+  },
+  "keywords": [
+    "dungeon",
+    "dnd",
+    "state",
+    "management",
+    "progress",
+    "tracking"
+  ],
+  "author": "Dan Mironenko <wolfson@bracketedrebels.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bracketedrebels/danzh-server/issues"
+  },
+  "homepage": "https://github.com/bracketedrebels/danzh-server#readme"
+}
