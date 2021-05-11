@@ -1,0 +1,43 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: db-base
+    container_name: danzh-db
+    restart: on-failure
+    ports:
+      - "8080:8080"
+      - "28015:28015"
+    command: rethinkdb --bind all --initial-password p@ssw0rd
+    healthcheck:
+      test: curl -f -v http://127.0.0.1:28015
+      start_period: 1s
+      interval: 1s
+      timeout: 5s
+      retries: 5
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api-base
+    volumes:
+      - ./src:/home/node/app/src
+      - ./nodemon.json:/home/node/app/nodemon.json
+    container_name: danzh-api
+    restart: on-failure
+    environment:
+      DB_HOST: 172.31.0.2
+      DB_PORT: 28015
+      DB_USER: admin
+      DB_PASSWORD: p@ssw0rd
+      DB_NAME: danzh-content
+      API_PORT: 3000
+      GQL_SCHEMA_PATH: src/schema.graphql
+    ports:
+      - "3000:3000"
+      - "4000:4000"
+    command: npm run dev
+    depends_on:
+      db:
+        condition: service_healthy

@@ -21,9 +21,9 @@ type Mutation {
   entityUpdate(projectId: ID!, patch: EntityUpdateMutationArgs!): Entity!
   entityRemove(projectId: ID!): Entity!
 
-  # edgeCreate(s: ID!, p: ID!, o: ID!, aspects: [String!]): Edge!
-  # edgeUpdate(s: ID!, p: ID!, o: ID!, aspects: [String!]): Edge!
-  # edgeRemove(s: ID!, p: ID!, o: ID!): Edge!
+  edgeCreate(s: ID!, p: ID!, o: ID!, aspects: [String!]): Edge!
+  edgeUpdate(s: ID!, p: ID!, o: ID!, aspects: [String!]): Edge!
+  edgeRemove(s: ID!, p: ID!, o: ID!): Edge!
 }
 
 input InputAspectTypeNumeric {
@@ -64,7 +64,8 @@ union AspectType = AspectTypeNumeric | AspectTypeString | AspectTypeSet
 
 type Aspect {
   id: ID!
-  name: String!
+  position: Int!
+  required: Boolean!
   type: AspectType!
   description: String
 }
@@ -78,6 +79,7 @@ type Predicate {
   id: ID!
   name: String!
   description: String!
+  aspect(id: ID): [Aspect!]!
 }
 
 input PrediateCreateMutationArgs {
@@ -90,11 +92,29 @@ input PrediateUpdateMutationArgs {
   description: String
 }
 
+type Project {
+  id: ID!
+  name: String!
+  description: String
+  predicate(id: ID): [Predicate!]!
+  entity(id: ID): [Entity!]!
+  edge(query: [SearchAtom!]): [Edge!]!
+}
+
+input ProjectCreateMutationArgs {
+  name: String!
+  description: String
+}
+
+input ProjectUpdateMutationArgs {
+  name: String
+  description: String
+}
+
 type Entity {
   id: ID!
   name: String!
   description: String
-  aspect(id: ID): [Aspect!]!
 }
 
 input EntityCreateMutationArgs {
@@ -107,23 +127,19 @@ input EntityUpdateMutationArgs {
   description: String
 }
 
-type Project {
-  id: ID!
-  name: String!
-  description: String
-  logo: String
-  predicate(id: ID): [Predicate!]!
-  entity(id: ID): [Entity!]!
-  aspect(id: ID): [Aspect!]!
+type Edge {
+  subject: Entity!
+  predicate: Predicate!
+  object: Entity!
 }
 
-input ProjectCreateMutationArgs {
-  name: String!
-  description: String
-  logo: String
+type EdgePredicate {
+  aspect: Aspect!
+  value: String
 }
 
-input ProjectUpdateMutationArgs {
-  name: String
-  description: String
+input SearchAtom {
+  s: String
+  p: String
+  o: String
 }
