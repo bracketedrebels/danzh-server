@@ -4,9 +4,11 @@
     "target": "ESNext",
     "moduleResolution": "Node",
     "module": "commonjs",
-    "rootDir": "./",
+    "rootDir": "./src",
     "outDir": "./build",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true
-  }
+  },
+  "include": ["./src/**/*"]
 }

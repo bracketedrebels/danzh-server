@@ -1,49 +1,57 @@
+# Define a Relay Cursor type:
+# https://relay.dev/graphql/connections.htm#sec-Cursor
+scalar Cursor
+
 type Query {
-  project(id: ID): [Project!]!
+  campaigns(size: Int, cursor: Cursor, orderBy: CampaignSortDescriptor): [Campaign!]!
+  campaign(id: ID!): Campaign!
 }
 
 type Mutation {
-  aspectCreateNumeric(predicateId: ID!, init: InputAspectTypeNumeric): Aspect!
-  aspectCreateString(predicateId: ID!, init: InputAspectTypeString): Aspect!
-  aspectCreateSet(predicateId: ID!, init: InputAspectTypeSet): Aspect!
-  aspectUpdate(aspectId: ID!, patch: AspectUpdateMutationArgs): Aspect!
-  aspectRemove(aspectId: ID!): Int
+  aspectCreateNumeric(init: InputAspectTypeNumeric): Aspect!
+  aspectCreateString(init: InputAspectTypeString): Aspect!
+  aspectCreateSet(init: InputAspectTypeSet): Aspect!
+  aspectUpdate(id: ID!, patch: AspectUpdateMutationArgs): Aspect!
+  aspectRemove(id: ID!): Aspect!
 
-  predicateCreate(projectId: ID!, init: PrediateCreateMutationArgs!): Predicate!
-  predicateUpdate(predicateId: ID!, patch: PrediateUpdateMutationArgs!): Predicate!
-  predicateRemove(predicateId: ID!): Predicate!
+  predicateCreate(id: ID!, init: PrediateCreateMutationArgs!): Predicate!
+  predicateUpdate(id: ID!, patch: PrediateUpdateMutationArgs!): Predicate!
+  predicateRemove(id: ID!): Predicate!
 
-  projectCreate(init: ProjectCreateMutationArgs!): Project!
-  projectUpdate(projectId: ID!, patch: ProjectUpdateMutationArgs!): Project!
-  projectRemove(projectId: ID!): Project!
+  campaignCreate(init: CampaignCreateMutationArgs!): Campaign!
+  campaignUpdate(id: ID!, patch: CampaignUpdateMutationArgs!): Campaign!
+  campaignRemove(id: ID!): Campaign!
 
-  entityCreate(projectId: ID!, init: EntityCreateMutationArgs!): Entity!
-  entityUpdate(projectId: ID!, patch: EntityUpdateMutationArgs!): Entity!
-  entityRemove(projectId: ID!): Entity!
+  entityCreate(id: ID!, init: EntityCreateMutationArgs!): Entity!
+  entityUpdate(id: ID!, patch: EntityUpdateMutationArgs!): Entity!
+  entityRemove(id: ID!): Entity!
 
   # edgeCreate(s: ID!, p: ID!, o: ID!, aspects: [String!]): Edge!
   # edgeUpdate(s: ID!, p: ID!, o: ID!, aspects: [String!]): Edge!
   # edgeRemove(s: ID!, p: ID!, o: ID!): Edge!
 }
 
+# ASPECT TYPES
+
 input InputAspectTypeNumeric {
   min: Float
   max: Float
   step: Float
-  required: Boolean
   description: String
+  name: String!
 }
 
 input InputAspectTypeString {
   regexp: String
   required: Boolean
   description: String
+  name: String!
 }
 
 input InputAspectTypeSet {
   items: [String!]
-  required: Boolean
   description: String
+  name: String!
 }
 
 type AspectTypeNumeric {
@@ -74,6 +82,8 @@ input AspectUpdateMutationArgs {
   description: String
 }
 
+# PREDICATE TYPES
+
 type Predicate {
   id: ID!
   name: String!
@@ -89,6 +99,8 @@ input PrediateUpdateMutationArgs {
   name: String
   description: String
 }
+
+# ENTITIY TYPES
 
 type Entity {
   id: ID!
@@ -107,7 +119,9 @@ input EntityUpdateMutationArgs {
   description: String
 }
 
-type Project {
+# CAMPAIGN TYPES
+
+type Campaign {
   id: ID!
   name: String!
   description: String
@@ -117,13 +131,27 @@ type Project {
   aspect(id: ID): [Aspect!]!
 }
 
-input ProjectCreateMutationArgs {
+input CampaignCreateMutationArgs {
   name: String!
   description: String
   logo: String
 }
 
-input ProjectUpdateMutationArgs {
+input CampaignUpdateMutationArgs {
   name: String
   description: String
+}
+
+input CampaignSortDescriptor {
+  field: CampaignOrderField
+  order: OrderDirection!
+}
+
+enum CampaignOrderField {
+  name
+}
+
+enum OrderDirection {
+  asc
+  desc
 }
